@@ -1,113 +1,180 @@
+"use client";
 import Image from "next/image";
+import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
+import ShareIcon from "@mui/icons-material/Share";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import { ReactNode, useEffect, useRef, useState } from "react";
+
+const appFeatures = [
+  {
+    title: "40x faster workflow",
+    description:
+      "Yarn uses AI to deliver videos hours faster than Descript and Adobe. Go from idea to asset in minutes.",
+    icon: <ElectricBoltIcon />,
+    color: "bg-indigo-700",
+  },
+  {
+    title: "Reuse, personalize, and tweak",
+    description:
+      "You edit Yarn videos like a doc, so you can reuse your Twitter feature launch as a personalized piece of sales collateral.",
+    icon: <ModeEditIcon />,
+    color: "bg-green-900",
+  },
+  {
+    title: "Simple and easy",
+    description:
+      "Yarn's beginner friendly – founders, salespeople, and PMMs with no video experience are using Yarn today.",
+    icon: <InsertEmoticonIcon />,
+    color: "bg-slate-700",
+  },
+  {
+    title: "Your brand, not cookie-cutter",
+    description:
+      "Think Notion, Linear, or Stripe-quality but branded for your startup. Your colors, typography, motion styles, and assets.",
+    icon: <DocumentScannerIcon />,
+    color: "bg-blue-600",
+  },
+  {
+    title: "Share instantly with analytics",
+    description:
+      "Use the share link to embed into emails or landing pages with global and per-viewer view counts and engagement metrics.",
+    icon: <ShareIcon />,
+    color: "bg-rose-900",
+  },
+  {
+    title: "Edit as a team",
+    description:
+      "Everything's shared seamlessly across your team. Your engineer can record the workflow – your marketer can script it.",
+    icon: <Diversity3Icon />,
+    color: "bg-gray-900",
+  },
+];
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div>
+      <HomeIntro />
+      <RevealOnScroll>
+        <div className={`grid grid-cols-3 gap-2 mx-80 my-14 `}>
+          {appFeatures.map((features) => {
+            return (
+              <div>
+                <AppFeature
+                  title={features.title}
+                  description={features.description}
+                  icon={features.icon}
+                  color={features.color}
+                />
+              </div>
+            );
+          })}
         </div>
+      </RevealOnScroll>
+    </div>
+  );
+}
+
+const RevealOnScroll = ({ children }: { children: ReactNode }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const scrollObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        scrollObserver.unobserve(entry.target);
+      }
+    });
+
+    scrollObserver.observe(ref.current);
+
+    return () => {
+      if (ref.current) {
+        scrollObserver.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  const classes = `transition-opacity duration-1000 
+      ${isVisible ? "opacity-100" : "opacity-0"}`;
+
+  return (
+    <div ref={ref} className={classes}>
+      {children}
+    </div>
+  );
+};
+
+export const openInNewTab = (url: string) => {
+  const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+  if (newWindow) newWindow.opener = null;
+};
+
+function HomeIntro() {
+  return (
+    <div className="mx-96 pt-24 pb-2">
+      <div className=" h-fitt text-5xl font-bold font-sans flex justify-center">
+        Make vidoes like the best
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className="flex justify-center items-center mt-2">
+        <div className=" text-slate-500 mr-1">Backed By</div>
+        <div className="mx-2">
+          <Image
+            src={
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Y_Combinator_logo.svg/1200px-Y_Combinator_logo.svg.png"
+            }
+            width={40}
+            height={40}
+            alt="Picture of Y Combinator Logo"
+          />
+        </div>
+        <div className="text-ycombinator text-xl">Combinator</div>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="flex justify-center mt-4 text-xl font-sans">
+        Create agency-quality product videos, sales demos, and help guides – in
+        minutes.
       </div>
-    </main>
+      <div className="flex justify-center mt-4">
+        <button
+          type="button"
+          className="text-slate-900 bg-slate-300 shadow-xl flex shadow-blue-500/50 focus:ring-4 rounded-lg text-lg font-bold px-5 py-2.5 me-2 mb-2 "
+          onClick={() => openInNewTab("https://form.typeform.com/to/gZowgb1M")}
+        >
+          join the waitlist
+        </button>
+        <button
+          type="button"
+          className="text-white bg-blue-600 shadow-xl flex shadow-blue-500/50 focus:ring-4 rounded-lg text-lg font-bold px-5 py-2.5 me-2 mb-2 "
+          onClick={() =>
+            openInNewTab("https://calendly.com/jasper-yarn/yarn-demo")
+          }
+        >
+          Book a 15 minute demo
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AppFeature({
+  title,
+  description,
+  icon,
+  color,
+}: {
+  title: string;
+  description: string;
+  icon: ReactNode;
+  color: string;
+}) {
+  return (
+    <div>
+      <div className={` ${color} w-fit p-3 rounded-lg`}>{icon}</div>
+      <div className="font-bold text-xl my-2"> {title}</div>
+      <div>{description}</div>
+    </div>
   );
 }
